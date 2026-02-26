@@ -1,0 +1,18 @@
+# See https://pre-commit.com for more information, specially https://pre-commit.com/#pre-commit-run for manual trigger
+# Some example useful invocations:
+#  pre-commit run: this is what pre-commit runs by default when committing. This will run all hooks against currently staged files.
+#  pre-commit run --all-files: run all the hooks against all the files. This is a useful invocation if you are using pre-commit in CI.
+#  pre-commit run check-executables-have-shebangs: run the check-executables-have-shebangs hook against all staged files.
+
+repos:
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.11.0  # Use the latest version of black that supports Python 3.9
+    hooks:
+    - id: black
+      language_version: python3.9
+      args: [--skip-string-normalization]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+    - id: flake8

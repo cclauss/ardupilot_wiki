@@ -449,7 +449,8 @@ if __name__ == "__main__":
     if run with '-h' or '--help', print help
     """
     parser = argparse.ArgumentParser(
-        description="Generate motor matrices (JSON) from 'AP_Motors/AP_MotorsMatrix.cpp'.")
+        description="Generate motor matrices (JSON) from 'AP_Motors/AP_MotorsMatrix.cpp'."
+    )
     parser.add_argument(
         "-o",
         "--output",
@@ -460,7 +461,8 @@ if __name__ == "__main__":
         help=(
             "Output to file (default is stdout; '-o' or '--output' with no argument writes to "
             f"'{DEFAULT_OUTPUT_FILE.relative_to(THIS_SCRIPT.parent)}')."
-        ))
+        ),
+    )
     parser.add_argument(
         "-f",
         "--force",
