@@ -604,7 +604,7 @@ Other functions are:
     ICEngine start / stop                 Controls ICE engine starter output :ref:`ICE engines<common-ice>`
     Autotune_test_gains                   After autotune,allows selecting tune(high) or pretune gains
     VTOL QuickTune                        Autotunes QuadPlane VTOL PIDs, see :ref:`quicktune`
-    Mount RP Lock                        | In RC targetting mode, if gimbal is capable and ANGLE RC targeting is
+    Mount RP Lock                        | In RC targeting mode, if gimbal is capable and ANGLE RC targeting is
                                          | used instead of RATE, the roll and or pitch axes
                                          | which normally are assumed to stabilize in earth frame at the target
                                          | angle, can be switched to body frame. If switched low, then roll and
