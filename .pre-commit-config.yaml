@@ -8,4 +8,10 @@ repos:
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
     hooks:
-    - id: flake8
+      - id: flake8
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.1.43
+    hooks:
+      - id: rumdl      # Lint only (fails on issues)
+        args: [--disable, "MD005,MD007,MD009,MD012,MD013,MD022,MD025,MD032,MD034,MD041,MD057,MD064,MD076"]
+      # - id: rumdl-fmt  # Auto-format and fail if issues remain
