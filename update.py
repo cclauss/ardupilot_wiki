@@ -287,7 +287,7 @@ def sphinx_make(site, parallel, fast):
             continue
         if wiki == 'frontend':
             continue
-        if site is not None and not site == wiki:
+        if site is not None and site != wiki:
             continue
         p = multiprocessing.Process(target=build_one, args=(wiki, fast))
         p.start()
@@ -479,9 +479,8 @@ def copy_common_source_files(start_dir=COMMON_DIR, clean_common=False):
             if file.endswith(".rst"):
                 # debug("  FILE: %s" % file)
                 source_file_path = os.path.join(root, file)
-                source_file = open(source_file_path, 'r', encoding='utf-8')
-                source_content = source_file.read()
-                source_file.close()
+                with open(source_file_path, 'r', encoding='utf-8') as source_file:
+                    source_content = source_file.read()
                 targets = get_copy_targets(source_content)
                 for wiki in targets:
                     content = strip_content(source_content, wiki)
@@ -512,9 +511,8 @@ def copy_common_source_files(start_dir=COMMON_DIR, clean_common=False):
                     shutil.copy2(src, dst)
             elif file.endswith(".js"):
                 source_file_path = os.path.join(root, file)
-                source_file = open(source_file_path, 'r', encoding='utf-8')
-                source_content = source_file.read()
-                source_file.close()
+                with open(source_file_path, 'r', encoding='utf-8') as source_file:
+                    source_content = source_file.read()
                 targets = get_copy_targets(source_content)
                 for wiki in targets:
                     content = strip_content(source_content, wiki)
@@ -885,14 +883,15 @@ def create_features_pages(site):
     # fetch and load most-recently-built features.json
     remove_if_exists("features.json.gz")
     fetch_url("https://firmware.ardupilot.org/features.json.gz")
-    features_json = json.load(gzip.open("features.json.gz"))
+    with gzip.open("features.json.gz", 'rt', encoding='utf-8') as in_file:
+        features_json = json.load(in_file)
     if features_json["format-version"] != "1.0.0":
         progress("bad format version")
         return
     features = features_json["features"]
 
     # progress("features: (%s)" % str(features))
-    for wiki in WIKI_NAME_TO_VEHICLE_NAME.keys():
+    for wiki in WIKI_NAME_TO_VEHICLE_NAME:
         debug(wiki)
         if site is not None and site != wiki:
             continue
@@ -943,10 +942,7 @@ def create_features_page(features, build_options_by_define, vehicletype):
                 # mismatch between build_options.py and features.json
                 progress(f"feature {feature} ({platform_key},{vehicletype}) not in build_options.py")
                 continue
-            if feature_in:
-                some_list = sorted_platform_features_in
-            else:
-                some_list = sorted_platform_features_not_in
+            some_list = sorted_platform_features_in if feature_in else sorted_platform_features_not_in
             some_list.append((build_options.category, feature))
 
         sorted_platform_features = (
@@ -965,10 +961,7 @@ def create_features_page(features, build_options_by_define, vehicletype):
                 # for now, do not include features that are on the
                 # board, just those that aren't, per Henry's request:
                 rows.append(row)
-        if len(rows) == 0:
-            t = ""
-        else:
-            t = rst_table.tablify(rows, headings=column_headings)
+        t = rst_table.tablify(rows, headings=column_headings) if rows else ""
         underline = "-" * len(platform_key)
         all_tables += (f'''
 .. _{reference_for_board(platform_key)}:

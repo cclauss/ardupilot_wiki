@@ -24,12 +24,13 @@ parser.add_argument("files", nargs="+", default=None, help="directories or files
 args = parser.parse_args()
 
 
-def load_param_map(fname):
-    lines = open(fname, 'r').readlines()
+def load_param_map(fname) -> dict:
+    with open(fname, 'r') as in_file:
+        lines = in_file.readlines()
     ret = {}
     for line in lines:
         if line.startswith("#"):
-            # allow comments
+            # ignore comments
             continue
         a = line.split()
         if len(a) != 2:
@@ -47,14 +48,15 @@ def process_file(fname, param_map):
             print(f"Skipping common file {fname}")
         return
     needs_write = False
-    txt = open(fname, "r").read()
+    with open(fname, "r") as in_file:
+        txt = in_file.read()
 
     replacements = [":ref:`PARAMNAME <PARAMNAME>`",
                     ":ref:`PARAMNAME<PARAMNAME>`"]
     if args.nonref:
         replacements.extend(["PARAMNAME"])
 
-    for old_name in param_map.keys():
+    for old_name in param_map:
         new_name = param_map[old_name]
         for r in replacements:
             p1 = r.replace("PARAMNAME", old_name)
@@ -65,11 +67,12 @@ def process_file(fname, param_map):
     if not needs_write:
         return
     print(f"Updating {fname}")
-    open(fname, "w").write(txt)
+    with open(fname, "w") as out_file:
+        out_file.write(txt)
 
 
 param_map = load_param_map(args.param_map)
-print(f"Loaded param map for {len(param_map.keys())} parameters")
+print(f"Loaded param map for {len(param_map)} parameters")
 
 for fname in args.files:
     if os.path.isfile(fname):

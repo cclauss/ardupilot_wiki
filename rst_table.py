@@ -19,15 +19,13 @@ def tablify_row(rowheading, row, widths, height):
             rowheading_line = rowheading_lines[i]
             out_line += joiner + " " + rowheading_line + " " * (widths[0] - len(rowheading_line) - 1)
             joiner = "#"
-        j = 0
-        for item in row_lines:
+        for j, item in enumerate(row_lines):
             widthnum = j
             if rowheading is not None:
                 widthnum += 1
             line = item[i]
             out_line += joiner + " " + line + " " * (widths[widthnum] - len(line) - 1)
             joiner = "|"
-            j += 1
         out_line += "|"
         out_lines.append(out_line)
     return "\n".join(out_lines)
@@ -77,8 +75,7 @@ def tablify_calc_row_widths_heights(rows, rowheadings, headings):
         if rowheadings is not None:
             values_to_check.append(all_rowheadings[rownum])
         values_to_check.extend(row[:])
-        colnum = 0
-        for value in values_to_check:
+        for colnum, value in enumerate(values_to_check):
             height = len(value.split("\n"))
             if height > heights[rownum]:
                 heights[rownum] = height
@@ -86,7 +83,6 @@ def tablify_calc_row_widths_heights(rows, rowheadings, headings):
             width = longest_line + 2  # +2 for leading/trailing ws
             if width > widths[colnum]:
                 widths[colnum] = width
-            colnum += 1
     return (widths, heights)
 
 

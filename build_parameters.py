@@ -213,11 +213,10 @@ def fetch_releases(firmware_url, vehicles):
         page_links = fetch_vehicle_subfolders(firmware_url + f)
         for folder in page_links:  # Non clever way to filter the strings insert by makehtml.py, unwanted folders, and so.
             version_folder = str(folder)
-            if version_folder.find("stable") > 0 and not version_folder.endswith("stable"): # If finish with
-                stableFirmwares.append(firmware_url[:-1] + version_folder[10:-2])
-            elif version_folder.find("latest") > 0 :
-                stableFirmwares.append(firmware_url[:-1] + version_folder[10:-2])
-            elif version_folder.find("beta") > 0:
+            if ("beta" in version_folder or
+                "latest" in version_folder or
+                (
+                    "stable" in version_folder and not version_folder.endswith("stable"))): # If finish with
                 stableFirmwares.append(firmware_url[:-1] + version_folder[10:-2])
 
     return stableFirmwares # links for the firmwares folders
@@ -350,8 +349,8 @@ def generate_rst_files(commits_to_checkout_and_parse):
         For each parameter file generate by param_parse.py, it inserts a version tag in anchors
         to do not make confusing in sphinx toctrees.
         """
-        file_in = open(source_file, "r")
-        file_out = open(dest_file, "w")
+        file_in = open(source_file, "r")  # noqa: SIM115
+        file_out = open(dest_file, "w")  # noqa: SIM115
         found_original_title = False
         if "latest" not in version_tag:
             file_out.write(':orphan:\n\n')
@@ -414,10 +413,8 @@ def generate_rst_files(commits_to_checkout_and_parse):
 
             # create a filename for new parameters file
             filename = "parameters-" + vehicle
-            if ("beta" in version or "rc" in version): # Plane uses BETA, Copter and Rover uses RCn
+            if "beta" in version or "rc" in version or "latest" in version: # Plane uses BETA, Copter and Rover uses RCn
                 filename += "-" + version  + ".rst"
-            elif ("latest" in version):
-                filename += "-" + version + ".rst"
             else:
                 filename += "-stable-" + version + ".rst"
 

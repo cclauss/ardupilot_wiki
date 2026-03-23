@@ -361,9 +361,7 @@ def handle_av_tails(layout, motor_element, number_element, letter_element, x, y)
         return
     x_scale = -1 if x < 0 and "v" not in layout["TypeName"].lower() else 1
     y_scale = -1
-    if x < 0 and "v" in layout["TypeName"].lower():
-        y_scale = 1
-    elif "v" not in layout["TypeName"].lower():
+    if x < 0 and "v" in layout["TypeName"].lower() or "v" not in layout["TypeName"].lower():
         y_scale = 1
     motor_element.set("style", f"transform: rotate3d({x_scale}, {y_scale}, 0, 45deg)")
     number_element.set("style", f"transform: rotate3d({x_scale}, {y_scale}, 0, 45deg)")
